@@ -11,11 +11,20 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 function fetchData(id, password, table) {
-    sql.createConnection({
+    const connection = sql.createConnection({
         user: 'root',
         host: 'localhost',
         password: ''
-    })
+    });
+    connection.connect(function (err) {
+        if (err) throw err;
+        console.log("Connected!");
+
+        connection.query(sql, function (err, result) {
+            if (err) throw err;
+            return result;
+        });
+    });
 }
 
 app.post('/getLoginData', (req, res) => {
