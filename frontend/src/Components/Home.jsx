@@ -1,12 +1,14 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../App';
 
 const textMessages = {
     admin: `The Admin Portal is for •Examiners •Scrutinizers •Councilors`,
     student: `The Student Portal is for obtaining the marks of their exams through provided credentials`
 }
 const Home = () => {
+    const { setAdminLevel } = useContext(Context);
     const notiRef = useRef();
     const navigate = useNavigate();
 
@@ -48,10 +50,10 @@ const Home = () => {
                 onMouseLeave={() => {
                     notiRef.current.style.transform = 'translateY(-100px)';
                 }}
-                w='20vw' bg={'blue.600'} variant={'solid'}>ADMIN</Button>
+                w='25vw' bg={'blue.600'} variant={'solid'}>ADMIN</Button>
 
             <Button
-                onClick={() => navigate('/login')}
+                onClick={() => { setAdminLevel('Student'); navigate('/login'); }}
                 boxShadow={'1px 1px 20px -4px green'}
                 onMouseEnter={() => {
                     notiRef.current.style.transform = 'translateY(10px)';
@@ -60,7 +62,7 @@ const Home = () => {
                 onMouseLeave={() => {
                     notiRef.current.style.transform = 'translateY(-100px)';
                 }}
-                w='20vw' bg='green.500'>STUDENT</Button>
+                w='25vw' bg='green.500'>STUDENT</Button>
         </Flex>
     )
 }

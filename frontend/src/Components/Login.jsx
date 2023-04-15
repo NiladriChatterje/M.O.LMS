@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const Login = () => {
     const { adminLevel, setAuthentic } = useContext(Context);
@@ -14,14 +15,21 @@ const Login = () => {
     useEffect(() => { return })
     function handleForm(e) {
         e.preventDefault();
-        console.log(idRef.current.value)
+
         if (idRef.current.value && passwordRef.current.value) {
-            setAuthentic(true);
-            navigate('/marksPortal')
+            queryAdminExistence({ id: idRef.current.value, password: passwordRef.current.value });
+            //navigate('/marksPortal')
         } else toast('All the Fields are necessary')
     };
 
-    function queryAdminExistence() {
+    async function queryAdminExistence(object) {
+
+        const { data } = await axios.post(`http://localhost:5000/getLoginData`, {
+            id: JSON.stringify(object?.id),
+            password: JSON.stringify(object?.password),
+            admin: JSON.stringify(adminLevel)
+        });
+        console.log(data)
 
     }
 
@@ -68,7 +76,8 @@ const Login = () => {
                         <Input type='text' placeholder='ID' ref={idRef} />
                         <FormLabel>password</FormLabel>
                         <Input type='password' placeholder='PASSWORD' ref={passwordRef} />
-                        <Button bg='teal.900' color='white' type='submit' variant={'solid'} left={'50%'}
+                        <Button bg='teal.900' color='white' boxShadow={'0 0 8px -2px rgb(10,14,220)'}
+                            type='submit' variant={'solid'} left={'50%'}
                             transform={'translate(-50%)'} mt={20}>SUBMIT</Button>
                     </FormControl>
                 </form>

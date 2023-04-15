@@ -13,7 +13,8 @@ const Navbar = () => {
             h='max-content'
             bg={'rgba(25,25,25,0.7)'}>
             <Text fontWeight={900} color={'white'} fontSize={'3xl'}>M.O.sys</Text>
-            <Button variant='solid' onClick={() => toast(`This Project was for the Purpose of secured management of student marks`)}>About</Button>
+            <Button variant='solid' bg={'red.400'} boxShadow={'1px 1px 20px -2px red'} color={'white'}
+                onClick={() => toast(`This Project was for the Purpose of secured management of student marks`)}>About</Button>
         </Flex>
     </>
     )

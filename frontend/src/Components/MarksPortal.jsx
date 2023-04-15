@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { Button, Flex, FormLabel, Input } from '@chakra-ui/react'
+import { Button, Flex, FormLabel, Input, Textarea } from '@chakra-ui/react'
 import { Navigate } from 'react-router-dom';
 import { Context } from '../App';
+import { toast } from 'react-hot-toast';
 
 const MarksPortal = () => {
-    const { authentic } = useContext(Context);
+    const { authentic, adminLevel } = useContext(Context);
 
     if (authentic)
         return (
@@ -31,7 +32,10 @@ const MarksPortal = () => {
                     <Input type='number' />
                     <FormLabel>Marks</FormLabel>
                     <Input type='number' />
-                    <Button mt={6} color={'white'} bg={'green.500'} onClick={''}>Update / Insert</Button>
+                    {adminLevel !== 'Examiner' ?
+                        (<><FormLabel>Reason</FormLabel><Textarea resize={false} /></>) : null}
+                    <Button mt={6} color={'white'} bg={'green.500'}
+                        onClick={() => toast('Updated successfully')}>Update / Insert</Button>
                 </Flex>
             </Flex>
         );

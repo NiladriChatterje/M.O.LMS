@@ -9,6 +9,8 @@ backend/node_modules
 # testing
 /coverage
 .env
+frontend/.env
+backend/.env
 # production
 /build
 

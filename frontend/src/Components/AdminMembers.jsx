@@ -4,6 +4,7 @@ import { Context } from '../App';
 import { useNavigate } from 'react-router-dom';
 
 
+const Adminmenbers = ['Examiner', 'Scrutinizer', 'Head Examiner', 'Tabulator', 'Councilor'];
 const AdminMembers = () => {
     const { setAdminLevel } = useContext(Context);
     const navigate = useNavigate();
@@ -23,11 +24,8 @@ const AdminMembers = () => {
                 h={500} w={400}
                 borderRadius={10}
                 bg={'white'}>
-                <Button bg={'teal.600'} color={'white'} onClick={() => { setAdminLevel('Examiner'); navigate('/login') }} variant={'solid'}>Examiner</Button>
-                <Button bg={'teal.600'} color={'white'} onClick={() => { setAdminLevel('Scrutinizer'); navigate('/login') }} variant={'solid'}>Scrutinizer</Button>
-                <Button bg={'teal.600'} color={'white'} onClick={() => { setAdminLevel('Councilor'); navigate('/login') }} variant={'solid'}>Councilor</Button>
-                <Button bg={'teal.600'} color={'white'} onClick={() => { setAdminLevel('Examiner'); navigate('/login') }} variant={'solid'}>setAdminLevel</Button>
-                <Button bg={'teal.600'} color={'white'} onClick={() => { setAdminLevel('Examiner'); navigate('/login') }} variant={'solid'}>Henlo</Button>
+                {Adminmenbers?.map(item => <Button bg={'green.600'} color={'white'} boxShadow={'1px 1px 20px -5px green'}
+                    onClick={() => { setAdminLevel(item); navigate('/login') }} variant={'solid'}>{item}</Button>)}
             </Flex>
         </Flex>
     )
