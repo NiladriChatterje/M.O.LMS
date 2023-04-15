@@ -21,7 +21,9 @@ const Login = () => {
         } else toast('All the Fields are necessary')
     };
 
+    function queryAdminExistence() {
 
+    }
 
 
     if (adminLevel)

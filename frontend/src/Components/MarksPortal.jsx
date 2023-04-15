@@ -23,6 +23,8 @@ const MarksPortal = () => {
                     left={'50%'}
                     top={'50%'}
                     transform={'translate(-50%,-50%)'}>
+                    <FormLabel>Student Name</FormLabel>
+                    <Input type='text' />
                     <FormLabel>Student Roll No.</FormLabel>
                     <Input type='number' />
                     <FormLabel>Semester</FormLabel>
