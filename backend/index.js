@@ -41,23 +41,27 @@ app.post('/updatestdmarks', async (req, res) => {
     let deserialized_subject = JSON.parse(subject);
     let deserialized_precededAuthority = JSON.parse(precededAuthority);
     console.log(deserialized_precededAuthority)
+    console.log(deserialized_adminlevel)
     if (Object.keys(result.subjects).includes(JSON.parse(subject))) {
         console.log('ok');
         if (deserialized_adminlevel == 'examiner') {
-            await db.collection('student').updateOne({ _id: parseInt(JSON.parse(std_roll)) }, { $set: { 'subjects.ML.examiner.score': JSON.parse(marks) } });
-            res.send('Updated Successfully');
+            result.subjects[deserialized_subject]['examiner'].score = parseFloat(JSON.parse(marks));
+            let fetchCollection = db.collection('student');
+            let success = await fetchCollection.replaceOne({ _id: parseInt(JSON.parse(std_roll)) }, result);
+
+            if (success)
+                res.send('Updated Successfully');
             return;
         }
         if (deserialized_adminlevel !== 'examiner' && result?.subjects[deserialized_subject][deserialized_precededAuthority]['score'] !== null) {
-            if (deserialized_precededAuthority == 'head_examiner')
-                await db.collection('student').updateOne({ _id: parseInt(JSON.parse(std_roll)) }, { $set: { 'subjects.ML.head_examiner.score': JSON.parse(marks) } });
-            else if (deserialized_precededAuthority == 'scrutinizer')
-                await db.collection('student').updateOne({ _id: parseInt(JSON.parse(std_roll)) }, { $set: { 'subjects.ML.scrutinizer.score': JSON.parse(marks) } });
-            else if (deserialized_precededAuthority == 'tabulator')
-                await db.collection('student').updateOne({ _id: parseInt(JSON.parse(std_roll)) }, { $set: { 'subjects.ML.tabulator.score': JSON.parse(marks) } });
-            else if (deserialized_precededAuthority == 'councilor')
-                await db.collection('student').updateOne({ _id: parseInt(JSON.parse(std_roll)) }, { $set: { 'subjects.ML.councilor.score': JSON.parse(marks) } });
-            res.send('Updated Successfully');
+            result.subjects[deserialized_subject][deserialized_adminlevel].score = parseFloat(JSON.parse(marks));
+            console.log(result.subjects.ML)
+            let fetchCollection = db.collection('student');
+            let success = await fetchCollection.replaceOne({ _id: parseInt(JSON.parse(std_roll)) }, result);
+
+            if ((result?.subjects[deserialized_subject][deserialized_precededAuthority].score - parseFloat(JSON.parse(marks)) == 0) && success)
+                res.send('Updated Successfully 0');
+            else res.send('Updated Successfully 1')
         } else {
             res.send('Preceded Authority hasn\'t updated the marks of this subject ')
         }
@@ -70,5 +74,7 @@ app.post('/getLoginData', async (req, res) => {
     let result = JSON.stringify(await fetchData(parseInt(JSON.parse(id)), JSON.parse(password), JSON.parse(admin)));
     res.send(result);
 });
-
+app.post('/updatestdremarks', async (req, res) => {
+    //await db.collection('student').updateOne()
+})
 app.listen(5000, () => { console.log('Listening on Port 5000') })

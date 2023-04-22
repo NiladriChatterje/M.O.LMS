@@ -6,9 +6,11 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
 const MarksPortal = () => {
+    const [remark, setRemark] = useState(() => 0)
     let precededAuthority = 'examiner'
     const { authentic, adminLevel, Adminmembers } = useContext(Context);
 
+    const remarkRef = useRef();
     const subjectRef = useRef();
     const rollRef = useRef();
     const marksRef = useRef();
@@ -30,12 +32,24 @@ const MarksPortal = () => {
             std_roll: JSON.stringify(rollRef.current.value),
             sem: JSON.stringify(semRef.current.value),
             marks: JSON.stringify(marksRef.current.value),
-            adminLevel: JSON.stringify(adminLevel),
+            adminLevel: JSON.stringify(adminLevel.name),
             subject: JSON.stringify(subjectRef.current.value.toUpperCase()),
             precededAuthority: JSON.stringify(precededAuthority)
         });
-        console.log(data)
-        toast(data)
+        if (!isNaN(parseInt(data[data.length - 1])))
+            toast(data.slice(0, data.length - 1));
+        else toast(data);
+        if (parseInt(data[data.length - 1]) && !remarkRef.current.value) { toast('Your entry of marks and your preceded authority level marks entry are different\nGive a remark on that'); }
+        else {
+            await axios.post('http://localhost:5000/updatestdremarks', {
+                std_roll: JSON.stringify(rollRef.current.value),
+                sem: JSON.stringify(semRef.current.value),
+                adminLevel: JSON.stringify(adminLevel.name),
+                subject: JSON.stringify(subjectRef.current.value.toUpperCase()),
+
+            });
+        }
+        setRemark(isNaN(parseInt(data[data.length - 1])) ? 0 : parseInt(data[data.length - 1]));
     }
 
     if (authentic)
@@ -65,8 +79,8 @@ const MarksPortal = () => {
                     <Input type='text' maxLength={11} ref={subjectRef} />
                     <FormLabel>Marks</FormLabel>
                     <Input type='number' ref={marksRef} />
-                    {adminLevel.name !== 'examiner' ?
-                        (<><FormLabel>Reason</FormLabel><Textarea resize={'None'} /></>) : null}
+                    {adminLevel.name !== 'examiner' && remark ?
+                        (<><FormLabel>Reason</FormLabel><Textarea resize={'None'} ref={remarkRef} /></>) : null}
                     <Button mt={6} color={'white'} bg={'green.500'}
                         onClick={updateMarks}>Update / Insert</Button>
                 </Flex>
