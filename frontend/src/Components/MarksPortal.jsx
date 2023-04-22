@@ -48,6 +48,8 @@ const MarksPortal = () => {
                 subject: JSON.stringify(subjectRef.current.value.toUpperCase()),
 
             });
+            setRemark(0);
+            return;
         }
         setRemark(isNaN(parseInt(data[data.length - 1])) ? 0 : parseInt(data[data.length - 1]));
     }
