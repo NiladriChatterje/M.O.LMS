@@ -10,8 +10,7 @@ const StudentsMarks = () => {
     const [isLoading, setIsLoading] = useState(() => true);
 
     useEffect(() => { setTimeout(() => { setIsLoading(false) }, 2000) });
-
-
+    console.log(onlyStudentCredentials)
     if (authentic)
         return (
             <Flex
@@ -48,20 +47,21 @@ const StudentsMarks = () => {
                     <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='8' />
                 </Box> : <TableContainer bg={'white'} borderRadius={10}
                     marginTop={'15vh'}
-                    w={'70vw'} h={'10vh'} pos={'relative'}>
+                    w={'70vw'} h={'max-content'} pos={'relative'}>
                     <Table>
-                        <Thead >
+                        <Tbody >
                             <Tr>
                                 <Th>SUBJECT</Th>
                                 <Th style={{ textAlign: 'right' }}>MARKS</Th>
                             </Tr>
-                            {Object.keys(onlyStudentCredentials?.subjects)?.map(item => <Tr>
-                                <Th>{item}</Th>
-                                <Th style={{ textAlign: 'right' }}>
-                                    {onlyStudentCredentials?.subjects[item].coucilor?.score || 'N/A'}
-                                </Th>
-                            </Tr>)}
-                        </Thead>
+                            {Object.keys(onlyStudentCredentials.subjects)?.map((item, i) => (
+                                <Tr key={i}>
+                                    <Th>{item}</Th>
+                                    <Th style={{ textAlign: 'right' }}>
+                                        {onlyStudentCredentials?.subjects[item]?.councilor?.score || 'N/A'}
+                                    </Th>
+                                </Tr>))}
+                        </Tbody>
                     </Table>
                 </TableContainer>}
             </Flex>
