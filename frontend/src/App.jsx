@@ -1,14 +1,17 @@
 import { useRef, useEffect, useState, createContext } from 'react'
 import './App.css';
 import PreLoader from './PreLoader';
-import { Home, Navbar, Login, MarksPortal, AdminMembers } from './Components'
+import { Home, Navbar, Login, MarksPortal, AdminMembers, StudentsMarks } from './Components'
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast';
 
+const Adminmembers = [{ name: 'examiner', precedence: 0 }, { name: 'head_examiner', precedence: 1 },
+{ name: 'scrutinizer', precedence: 2 }, { name: 'tabulator', precedence: 3 }, { name: 'councilor', precedence: 4 }];
 export const Context = createContext();
 function App() {
   const [adminLevel, setAdminLevel] = useState(null);
   const [authentic, setAuthentic] = useState(() => false);
+  const [onlyStudentCredentials, setStudentCredentials] = useState({});
   const loaderRef = useRef();
 
   useEffect(() => {
@@ -18,7 +21,7 @@ function App() {
   }, []);
 
   return (
-    <Context.Provider value={{ adminLevel, setAdminLevel, authentic, setAuthentic }}>
+    <Context.Provider value={{ adminLevel, setAdminLevel, authentic, setAuthentic, Adminmembers, onlyStudentCredentials, setStudentCredentials }}>
       <Toaster />
       <PreLoader loaderRef={loaderRef} />
       <Navbar />
@@ -28,6 +31,7 @@ function App() {
         <Route path={'/admin'} element={<AdminMembers />} />
         <Route path={'/marksPortal'} element={<MarksPortal />} />
         <Route path={'/AdminMembers'} element={<AdminMembers />} />
+        <Route path={'/marksVisible'} element={<StudentsMarks />} />
       </Routes>
     </Context.Provider>
   )

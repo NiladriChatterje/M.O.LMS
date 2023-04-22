@@ -1,36 +1,45 @@
-import React, { useRef, useContext } from 'react';
-import { FormControl, Flex, FormLabel, Input, Button, Box, Text } from '@chakra-ui/react';
+import React, { useRef, useContext, useState } from 'react';
+import { FormControl, Flex, FormLabel, Input, Button, Box, Text, InputRightElement, InputGroup } from '@chakra-ui/react';
 import { toast } from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Context } from '../App';
-import { useEffect } from 'react';
+import { AiFillEye } from 'react-icons/ai'
 import axios from 'axios';
 
 const Login = () => {
-    const { adminLevel, setAuthentic } = useContext(Context);
+    const [toggle, setToggle] = useState(() => false)
+    const { adminLevel, setAuthentic, setStudentCredentials } = useContext(Context);
     const navigate = useNavigate();
     const idRef = useRef();
     const passwordRef = useRef();
 
-    useEffect(() => { return })
-    function handleForm(e) {
+    async function handleForm(e) {
         e.preventDefault();
 
         if (idRef.current.value && passwordRef.current.value) {
-            queryAdminExistence({ id: idRef.current.value, password: passwordRef.current.value });
-            //navigate('/marksPortal')
+            let outcome = await queryAdminExistence({ id: idRef.current.value, password: passwordRef.current.value });
+            if (outcome) {
+                setAuthentic(true);
+                if (adminLevel.name !== 'student')
+                    navigate('/marksPortal');
+                else
+                    navigate('/marksVisible');
+            }
+            else toast('Wrong Credentials !!')
         } else toast('All the Fields are necessary')
     };
 
     async function queryAdminExistence(object) {
 
-        const { data } = await axios.post(`http://localhost:5000/getLoginData`, {
+        const { data } = await axios.post("http://localhost:5000/getLoginData", {
             id: JSON.stringify(object?.id),
             password: JSON.stringify(object?.password),
-            admin: JSON.stringify(adminLevel)
+            admin: JSON.stringify(adminLevel?.name)
         });
-        console.log(data)
-
+        if (JSON.parse(data)) {
+            setStudentCredentials(JSON.parse(data)); return true;
+        }
+        return JSON.parse(data);
     }
 
 
@@ -49,7 +58,7 @@ const Login = () => {
                     h={'max-content'}
                     borderRadius={10}
                     fontWeight={900}>
-                    {adminLevel.toUpperCase()}
+                    {adminLevel?.name.toUpperCase()}
                 </Text>
                 <form onSubmit={handleForm}>
                     <FormControl
@@ -73,9 +82,15 @@ const Login = () => {
                             transform={'translateX(-50%)'} />
 
                         <FormLabel>ID</FormLabel>
-                        <Input type='text' placeholder='ID' ref={idRef} />
+                        <Input type='number' placeholder='ID' ref={idRef} />
                         <FormLabel>password</FormLabel>
-                        <Input type='password' placeholder='PASSWORD' ref={passwordRef} />
+                        <InputGroup>
+                            <Input type={toggle ? 'text' : 'password'} placeholder='PASSWORD' ref={passwordRef} />
+                            <InputRightElement
+                                onClick={() => setToggle(prev => !prev)}
+                                cursor={'pointer'}
+                                children={<AiFillEye color='gray.900' />}
+                            /></InputGroup>
                         <Button bg='teal.900' color='white' boxShadow={'0 0 8px -2px rgb(10,14,220)'}
                             type='submit' variant={'solid'} left={'50%'}
                             transform={'translate(-50%)'} mt={20}>SUBMIT</Button>

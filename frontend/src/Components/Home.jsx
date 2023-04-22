@@ -53,7 +53,7 @@ const Home = () => {
                 w='25vw' bg={'blue.600'} variant={'solid'}>ADMIN</Button>
 
             <Button
-                onClick={() => { setAdminLevel('Student'); navigate('/login'); }}
+                onClick={() => { setAdminLevel({ name: 'student', precedence: -1 }); navigate('/login'); }}
                 boxShadow={'1px 1px 20px -4px green'}
                 onMouseEnter={() => {
                     notiRef.current.style.transform = 'translateY(10px)';

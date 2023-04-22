@@ -4,9 +4,9 @@ import { Context } from '../App';
 import { useNavigate } from 'react-router-dom';
 
 
-const Adminmenbers = ['Examiner', 'Scrutinizer', 'Head Examiner', 'Tabulator', 'Councilor'];
 const AdminMembers = () => {
-    const { setAdminLevel } = useContext(Context);
+
+    const { setAdminLevel, Adminmembers } = useContext(Context);
     const navigate = useNavigate();
 
     return (
@@ -21,14 +21,14 @@ const AdminMembers = () => {
                 left={'50%'}
                 top={'50%'}
                 transform={'translate(-50%,-50%)'}
-                h={500} w={400}
+                h={500} w={window.innerWidth > 1200 ? '30vw' : '80vw'}
                 borderRadius={10}
                 bg={'white'}>
-                {Adminmenbers?.map(item => <Button bg={'green.600'} color={'white'} boxShadow={'1px 1px 20px -5px green'}
-                    onClick={() => { setAdminLevel(item); navigate('/login') }} variant={'solid'}>{item}</Button>)}
+                {Adminmembers?.map(item => <Button key={item.precedence} bg={'green.600'} color={'white'} boxShadow={'1px 1px 20px -5px green'}
+                    onClick={() => { setAdminLevel(item); navigate('/login') }} variant={'solid'}>{item.name}</Button>)}
             </Flex>
         </Flex>
     )
 }
 
-export default AdminMembers
+export default AdminMembers;
