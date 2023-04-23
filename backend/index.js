@@ -36,32 +36,30 @@ app.post('/updatestdmarks', async (req, res) => {
     const { sem, marks, std_roll, adminLevel, subject, precededAuthority } = req.body;
     JSON.parse(marks);
     const result = await db.collection('student').findOne({ _id: parseInt(JSON.parse(std_roll)), semester: parseInt(JSON.parse(sem)) })
-    if (!result) { res.send("No such record found of the student"); return; }
+    if (!result) { res.send('No such record of student found'); return; }
     let deserialized_adminlevel = JSON.parse(adminLevel);
     let deserialized_subject = JSON.parse(subject);
     let deserialized_precededAuthority = JSON.parse(precededAuthority);
     console.log(deserialized_precededAuthority)
     console.log(deserialized_adminlevel)
     if (Object.keys(result.subjects).includes(JSON.parse(subject))) {
-        console.log('ok');
+
         if (deserialized_adminlevel == 'examiner') {
             result.subjects[deserialized_subject]['examiner'].score = parseFloat(JSON.parse(marks));
             let fetchCollection = db.collection('student');
             let success = await fetchCollection.replaceOne({ _id: parseInt(JSON.parse(std_roll)) }, result);
 
             if (success)
-                res.send('Updated Successfully');
+                res.send(JSON.stringify(result));
             return;
         }
         if (deserialized_adminlevel !== 'examiner' && result?.subjects[deserialized_subject][deserialized_precededAuthority]['score'] !== null) {
             result.subjects[deserialized_subject][deserialized_adminlevel].score = parseFloat(JSON.parse(marks));
-            console.log(result.subjects.ML)
-            let fetchCollection = db.collection('student');
-            let success = await fetchCollection.replaceOne({ _id: parseInt(JSON.parse(std_roll)) }, result);
 
-            if ((result?.subjects[deserialized_subject][deserialized_precededAuthority].score - parseFloat(JSON.parse(marks)) == 0) && success)
-                res.send('Updated Successfully 0');
-            else res.send('Updated Successfully 1')
+            let success = await db.collection('student').replaceOne({ _id: parseInt(JSON.parse(std_roll)) }, result);
+
+            if (success)
+                res.send(JSON.stringify(result));
         } else {
             res.send('Preceded Authority hasn\'t updated the marks of this subject ')
         }
@@ -75,6 +73,10 @@ app.post('/getLoginData', async (req, res) => {
     res.send(result);
 });
 app.post('/updatestdremarks', async (req, res) => {
-    //await db.collection('student').updateOne()
+    const { result } = req.body;
+    const deserialzed_result = JSON.parse(result)
+    console.log(JSON.parse(result))
+    const success = await db.collection('student').replaceOne({ _id: parseInt(deserialzed_result?._id) }, deserialzed_result);
+    if (success) res.send('Remark Updated')
 })
 app.listen(5000, () => { console.log('Listening on Port 5000') })

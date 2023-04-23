@@ -5,8 +5,8 @@ import { Home, Navbar, Login, MarksPortal, AdminMembers, StudentsMarks } from '.
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast';
 
-const Adminmembers = [{ name: 'examiner', precedence: 0 }, { name: 'head_examiner', precedence: 1 },
-{ name: 'scrutinizer', precedence: 2 }, { name: 'tabulator', precedence: 3 }, { name: 'councilor', precedence: 4 }];
+const Adminmembers = [{ name: 'examiner', precedence: 0 }, { name: 'scrutinizer', precedence: 1 },
+{ name: 'head_examiner', precedence: 2 }, { name: 'tabulator', precedence: 3 }, { name: 'councilor', precedence: 4 }];
 export const Context = createContext();
 function App() {
   const [adminLevel, setAdminLevel] = useState(null);

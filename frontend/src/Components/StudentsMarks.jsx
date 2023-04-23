@@ -10,7 +10,7 @@ const StudentsMarks = () => {
     const [isLoading, setIsLoading] = useState(() => true);
 
     useEffect(() => { setTimeout(() => { setIsLoading(false) }, 2000) });
-    console.log(onlyStudentCredentials)
+    console.log(onlyStudentCredentials);
     if (authentic)
         return (
             <Flex
