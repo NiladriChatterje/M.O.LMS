@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import { AiFillEye } from 'react-icons/ai'
 import axios from 'axios';
+import { useAddress, useContract, useContractWrite } from '@thirdweb-dev/react';
 
 const Login = () => {
     const [toggle, setToggle] = useState(() => false)
@@ -13,6 +14,12 @@ const Login = () => {
     const idRef = useRef();
     const passwordRef = useRef();
 
+    const address = useAddress();
+    const { contract } = useContract('0x02142106Ae7DcB5242FD2Ce5200B89903bEc7B03');
+    const { mutate: setExaminer } = useContractWrite(contract, "setExaminer");
+
+
+
     async function handleForm(e) {
         e.preventDefault();
 
@@ -20,8 +27,10 @@ const Login = () => {
             let outcome = await queryAdminExistence({ id: idRef.current.value, password: passwordRef.current.value });
             if (outcome) {
                 setAuthentic(true);
-                if (adminLevel.name !== 'student')
+                if (adminLevel.name !== 'student') {
+                    if (adminLevel == 'examiner') setExaminer(address)
                     navigate('/marksPortal');
+                }
                 else
                     navigate('/marksVisible');
             }

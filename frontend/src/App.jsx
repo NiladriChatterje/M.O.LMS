@@ -4,6 +4,7 @@ import PreLoader from './PreLoader';
 import { Home, Navbar, Login, MarksPortal, AdminMembers, StudentsMarks } from './Components'
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast';
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 const Adminmembers = [{ name: 'examiner', precedence: 0 }, { name: 'scrutinizer', precedence: 1 },
 { name: 'head_examiner', precedence: 2 }, { name: 'tabulator', precedence: 3 }, { name: 'councilor', precedence: 4 }];
@@ -25,6 +26,7 @@ function App() {
       <Toaster />
       <PreLoader loaderRef={loaderRef} />
       <Navbar />
+      <ConnectWallet style={{ position: 'fixed', top: 5, right: 10 }} />
       <Routes>
         <Route path={'/'} element={<Home />} />
         <Route path={'/login'} element={<Login />} />

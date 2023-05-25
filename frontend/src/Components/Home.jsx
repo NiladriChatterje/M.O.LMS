@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 
 const textMessages = {
-    admin: `The Admin Portal is for •Examiners •Scrutinizers •Councilors`,
+    admin: `The Admin Portal is for •Examiners •Scrutinizers •Head-Examiner •Tabulator & •Councilors`,
     student: `The Student Portal is for obtaining the marks of their exams through provided credentials`
 }
 const Home = () => {

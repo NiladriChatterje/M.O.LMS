@@ -174,6 +174,23 @@ const students = [{
         }
     }
 }];
+const semester_to_subs = [{
+    1: {
+        ML: {
+
+        }
+    },
+    2: {
+        ML: {
+
+        }
+    },
+    3: {
+        ML: {
+
+        }
+    }
+}];
 
 const Examiner = [{ _id: 100000, name: 'Examiner1', password: 'admin_examiner_1' },
 { _id: 100001, name: 'Examiner2', password: 'admin_examiner_2' },

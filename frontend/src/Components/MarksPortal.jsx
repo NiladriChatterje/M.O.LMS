@@ -4,15 +4,17 @@ import { Navigate } from 'react-router-dom';
 import { Context } from '../App';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { Web3Button } from '@thirdweb-dev/react';
 
 const selectReasonList = ['Counting Mistake', 'Skipped Checking', 'Misinterpretation', 'wrong question'];
 const MarksPortal = () => {
     const [remark, setRemark] = useState(() => 0);
     const [localData, setLocalData] = useState(() => { })
+    const [deployToBlock, setDeployToBlockchain] = useState(() => false);
     let precededAuthority = 'examiner'
     const { authentic, adminLevel, Adminmembers } = useContext(Context);
 
-    const remarkRef = useRef();
+    const remarkRef = useRef('');
     const subjectRef = useRef();
     const rollRef = useRef();
     const marksRef = useRef();
@@ -41,13 +43,16 @@ const MarksPortal = () => {
 
 
         if (typeof data == 'string') toast(data);
-        else { toast("Updated successfully"); setLocalData(data); }
+        else { toast("Updated successfully"); setLocalData(data); setDeployToBlockchain(true); }
         if (data?.subjects[subjectRef.current.value.toUpperCase()][precededAuthority].score - parseFloat(marksRef.current.value) !== 0) {
             toast("Your entry is different from your preceded authority level");
             toast("Give a reason on that");
             setRemark(1);
         } else setRemark(0);
 
+        if (!remark) {
+
+        }
     };
 
     async function updateRemark() {
@@ -55,7 +60,6 @@ const MarksPortal = () => {
 
         if (localData && remarkRef.current) {
             let duplicate = { ...localData };
-            console.log(duplicate);
             duplicate.subjects[subjectRef.current.value.toUpperCase()][adminLevel?.name]['remark'] = remarkRef.current;
 
             const { data } = await axios.post('http://localhost:5000/updatestdremarks', {
@@ -109,6 +113,22 @@ const MarksPortal = () => {
                                         }}>{item}</MenuItem>)}
                                 </MenuList>
                             </Menu></>) : null}
+                    {deployToBlock ? <Web3Button style={{ background: 'green', color: 'white', marginTop: 15 }}
+                        contractAddress='0x02142106Ae7DcB5242FD2Ce5200B89903bEc7B03'
+                        action={async (contract) => {
+                            if (adminLevel?.name == 'examiner')
+                                await contract.call('addExaminerMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value)]);
+                            else if (adminLevel?.name == 'scrutinizer')
+                                await contract.call('addScrutinizerMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
+                            else if (adminLevel?.name == 'head_examiner')
+                                await contract.call('addHeadMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
+                            else if (adminLevel?.name == 'tabulator')
+                                await contract.call('addTabMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
+                            else
+                                await contract.call('addCouncilorMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
+                        }}>
+                        Upload to Blockchain
+                    </Web3Button> : null}
                     <Button mt={6} color={'white'} bg={'green.500'}
                         onClick={updateMarks}>Update / Insert</Button>
                 </Flex>

@@ -13,7 +13,14 @@ frontend/.env
 backend/.env
 # production
 /build
+coverage
+coverage.json
+typechain
+typechain-types
 
+#Hardhat files
+cache
+artifacts
 # misc
 .DS_Store
 .env.local
