@@ -1,24 +1,31 @@
-import React, { useContext, useRef, useState } from 'react';
-import { Button, Flex, FormLabel, Input, Menu, MenuItem, MenuList, MenuButton } from '@chakra-ui/react'
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Button, Flex, FormLabel, Input, Th, Tr, TableContainer, TableCaption, Table, Thead, Td, Tbody, Text } from '@chakra-ui/react'
 import { Navigate } from 'react-router-dom';
 import { Context } from '../App';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
-import { Web3Button } from '@thirdweb-dev/react';
 
 const selectReasonList = ['Counting Mistake', 'Skipped Checking', 'Misinterpretation', 'wrong question'];
+let examinerMarksList, scrutinizerMarksList, headExaminerMarksList, tabulatorMarksList, ControllerMarksList;
 const MarksPortal = () => {
     const [remark, setRemark] = useState(() => 0);
     const [localData, setLocalData] = useState(() => { })
     const [deployToBlock, setDeployToBlockchain] = useState(() => false);
+    const [listOfStudents, setListOfStudents] = useState(() => []);
     let precededAuthority = 'examiner'
-    const { authentic, adminLevel, Adminmembers } = useContext(Context);
+    const { subject, subjectArray, adminLevel, Adminmembers } = useContext(Context);
 
-    const remarkRef = useRef('');
+    const remarkRef = useRef(' ');
     const subjectRef = useRef();
     const rollRef = useRef();
     const marksRef = useRef();
     const semRef = useRef();
+
+    const examinerRef = useRef();
+    const scrutinizerRef = useRef();
+    const headExaminerRef = useRef();
+    const tabulatorRef = useRef();
+    const controllerRef = useRef();
 
     async function updateMarks() {
         if (!(subjectRef.current.value && rollRef.current.value && marksRef.current.value && semRef.current.value)) {
@@ -34,7 +41,7 @@ const MarksPortal = () => {
         }
         let { data } = await axios.post('http://localhost:5000/updatestdmarks', {
             std_roll: JSON.stringify(rollRef.current.value),
-            sem: JSON.stringify(semRef.current.value),
+            sem: JSON.stringify(subjectArray?.sem),
             marks: JSON.stringify(marksRef.current.value),
             adminLevel: JSON.stringify(adminLevel.name),
             subject: JSON.stringify(subjectRef.current.value.toUpperCase()),
@@ -70,68 +77,98 @@ const MarksPortal = () => {
         }
     }
 
-    if (authentic)
+    async function getListOfStudentsWithUpdate() {
+        const { data } = await axios.post('');
+    }
+
+    function updateToDB() {
+        for (let i of Adminmembers) {
+            if (adminLevel.name === 'examiner') break;
+            if (adminLevel?.precedence - 1 === i.precedence) {
+                precededAuthority = i.name;
+                break;
+            }
+        }
+        let flag = 0;
+        for (let i in listOfStudents) {
+            let j = parseInt(i)
+            if (adminLevel.name === 'examiner') {
+                if (examinerMarksList[j].value !== '') {
+                    flag++
+                }
+                else {
+                    //toast("Please Check that all students have the marks")
+                }
+            }
+            else if (adminLevel.name === 'scrutinizer') {
+
+            }
+            else if (adminLevel.name === 'head_examiner') {
+
+            }
+            else if (adminLevel.name === 'tabulator') {
+
+            }
+            else {
+
+            }
+        }
+        if (flag === listOfStudents.length) toast('Updated')
+        else toast('Please Check that all students have the marks')
+
+    }
+
+    useEffect(() => {
+        async function getListOfStudents(sem) {
+            const { data } = await axios.post('http://localhost:5000/getStudentList', {
+                sem: JSON.stringify(sem),
+            });
+            console.log(data)
+            setListOfStudents(data);
+        };
+        getListOfStudents(subjectArray.sem);
+
+        examinerMarksList = document.getElementsByClassName('examinerMarks');
+        scrutinizerMarksList = document.getElementsByClassName('scrutinizerMarks');
+        headExaminerMarksList = document.getElementsByClassName('headExaminerMarks');
+        tabulatorMarksList = document.getElementsByClassName('tabulatorMarks');
+        ControllerMarksList = document.getElementsByClassName('ControllerMarks');
+    }, []);
+
+
+    if (subject)
         return (
-            <Flex
-                bg={'blackAlpha.900'}
-                w={'full'}
-                h={'100vh'}>
-                <Flex
-                    flexDir={'column'}
-                    bg={'white'}
-                    borderRadius={10}
-                    w={400}
-                    h={'max-content'}
-                    p={5}
-                    pos={'fixed'}
-                    left={'50%'}
-                    top={'50%'}
-                    transform={'translate(-50%,-50%)'}>
-                    <FormLabel>Student Roll No.</FormLabel>
-                    <Input type='number' ref={rollRef} />
-                    <FormLabel>Semester</FormLabel>
-                    <Input type='number' ref={semRef} />
-                    <FormLabel>Subject</FormLabel>
-                    <Input type='text' maxLength={11} ref={subjectRef} />
-                    <FormLabel>Marks</FormLabel>
-                    <Input type='number' ref={marksRef} maxLength={3} />
-                    {adminLevel.name !== 'examiner' && remark ?
-                        (<><FormLabel>Reason</FormLabel>
-                            <Menu>
-                                <MenuButton
-                                    bg={'green.600'}
-                                    color={'white'}
-                                    borderRadius={10}
-                                >
-                                    Remarks
-                                </MenuButton>
-                                <MenuList w={'full'}>
-                                    {selectReasonList?.map((item, i) => <MenuItem key={i}
-                                        onClick={() => {
-                                            remarkRef.current = item;
-                                            updateRemark();
-                                        }}>{item}</MenuItem>)}
-                                </MenuList>
-                            </Menu></>) : null}
-                    {deployToBlock ? <Web3Button style={{ background: 'green', color: 'white', marginTop: 15 }}
-                        contractAddress='0x02142106Ae7DcB5242FD2Ce5200B89903bEc7B03'
-                        action={async (contract) => {
-                            if (adminLevel?.name == 'examiner')
-                                await contract.call('addExaminerMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value)]);
-                            else if (adminLevel?.name == 'scrutinizer')
-                                await contract.call('addScrutinizerMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
-                            else if (adminLevel?.name == 'head_examiner')
-                                await contract.call('addHeadMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
-                            else if (adminLevel?.name == 'tabulator')
-                                await contract.call('addTabMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
-                            else
-                                await contract.call('addCouncilorMarks', [parseInt(rollRef.current.value), parseInt(marksRef.current.value), remarkRef.current]);
-                        }}>
-                        Upload to Blockchain
-                    </Web3Button> : null}
-                    <Button mt={6} color={'white'} bg={'green.500'}
-                        onClick={updateMarks}>Update / Insert</Button>
-                </Flex>
+            <Flex w={'full'} h={'100vh'} flexDir={'column'} alignItems={'center'}>
+                <Text>{subject.name}</Text>
+                <TableContainer bg={'white'} boxShadow={'1px 1px 10px -8px black'} p={10}>
+                    <Table variant='simple'>
+                        <Thead>
+                            <Tr>
+                                <Th>NAME</Th>
+                                <Th>ROLL NO.</Th>
+                                <Th isNumeric>EXAMINER</Th>
+                                <Th isNumeric>SCRUTINIZER</Th>
+                                <Th isNumeric>HEAD EXAMINER</Th>
+                                <Th isNumeric>TABULATOR</Th>
+                                <Th isNumeric>CONTROLLER OF EXAMINATION</Th>
+                                {adminLevel.name !== 'examiner' && <Th isNumeric>REMARKS</Th>}
+                            </Tr>
+                        </Thead>
+                        <Tbody >
+                            {listOfStudents?.map(item => <Tr key={item._id}>
+                                <Td>{item.name}</Td>
+                                <Td>{item._id}</Td>
+                                <Td ><Input border={'1px solid black'} type={'number'} className='examinerMarks' ref={examinerRef} w={100} disabled={!(adminLevel.name === 'examiner')} required={adminLevel.name === 'examiner'} /></Td>
+                                <Td ><Input border={'1px solid black'} type={'number'} className='scrutinizerMarks' ref={scrutinizerRef} w={100} disabled={!(adminLevel?.name === 'scrutinizer')} required={adminLevel?.name === 'scrutinizer'} /></Td>
+                                <Td ><Input border={'1px solid black'} type={'number'} className='headExaminerMarks' ref={headExaminerRef} w={100} disabled={!(adminLevel?.name === 'head_examiner')} required={adminLevel?.name === 'head_examiner'} /></Td>
+                                <Td ><Input border={'1px solid black'} type={'number'} className='tabulatorMarks' ref={tabulatorRef} w={100} disabled={!(adminLevel.name === 'tabulator')} required={adminLevel.name === 'tabulator'} /></Td>
+                                <Td ><Input border={'1px solid black'} type={'number'} className='ControllerMarks' ref={controllerRef} w={100} disabled={!(adminLevel.name === 'Controller_of_Examination')} required={adminLevel.name === 'Controller_of_Examination'} /></Td>
+                                {adminLevel.name !== 'examiner' && <Td ><Input border={'1px solid black'} type={'text'} w={100} ref={remarkRef} /></Td>}
+                            </Tr>)}
+                        </Tbody>
+                        <TableCaption><Button onClick={updateToDB} color={'white'} bg={'blue.900'}>Update</Button></TableCaption>
+                    </Table>
+                </TableContainer>
             </Flex>
         );
     return <Navigate to='/login' />

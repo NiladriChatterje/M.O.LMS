@@ -6,13 +6,15 @@ const Navbar = () => {
     return (<>
         <Flex
             p={5}
-            pos={'fixed'}
+            pos={'sticky'}
             top={0}
+            zIndex={2}
+            bg={'gray.50'}
+            boxShadow={'1px 3px 15px -5px black'}
             justifyContent={'space-between'}
             w='full'
-            h='max-content'
-            bg={'rgba(25,25,25,0.7)'}>
-            <Text fontWeight={900} color={'white'} fontSize={'3xl'}>Student Marks Portal</Text>
+            h='max-content'>
+            <Text fontWeight={900} fontSize={'3xl'}>M.S. LMS</Text>
         </Flex>
     </>
     )

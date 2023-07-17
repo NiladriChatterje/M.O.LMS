@@ -1,196 +1,8 @@
 const { MongoClient } = require('mongodb')
 
-const students = [{
-    _id: 2182001,
-    name: 'Sohini Ghosh',
-    semester: 4,
-    password: 'SohiniGhosh',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-},
-{
-    _id: 2182002,
-    name: 'Satarupa Mukherjee',
-    semester: 4,
-    password: 'SatarupaMukherjee',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-},
-{
-    _id: 2182003,
-    name: 'Mainak Shaw',
-    semester: 4,
-    password: 'MainakShaw',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-},
-{
-    _id: 2182004,
-    name: 'Nil Nitin Mukesh',
-    semester: 4,
-    password: 'NilNitinMukhesh',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-},
-{
-    _id: 2182005,
-    name: 'Student_6',
-    semester: 4,
-    password: 'Student_6',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-},
-{
-    _id: 2182006,
-    name: 'Student_7',
-    semester: 4,
-    password: 'Student_7',
-    subjects: {
-        ML: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        DSA: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        },
-        NETWORKING: {
-            examiner: { score: null },
-            head_examiner: { score: null, remark: null },
-            scrutinizer: { score: null, remark: null },
-            tabulator: { score: null, remark: null },
-            councilor: { score: null, remark: null }
-        }
-    }
-}];
-const semester_to_subs = [{
-    1: {
-        ML: {
+const students = require('./studentCollection');
 
-        }
-    },
-    2: {
-        ML: {
-
-        }
-    },
-    3: {
-        ML: {
-
-        }
-    }
-}];
+const sem_to_sub = require('./SemToSub.js')
 
 const Examiner = [{ _id: 100000, name: 'Examiner1', password: 'admin_examiner_1' },
 { _id: 100001, name: 'Examiner2', password: 'admin_examiner_2' },
@@ -213,6 +25,7 @@ async function setUpSchema() {
         await db.dropDatabase();
         const student_collection = db.collection('student');
         const examiner_collection = db.collection('examiner');
+        const SemToSub = db.collection('SemToSub')
         const head_examiner = db.collection('head_examiner', { capped: true, size: 2, max: 1 });
         const scrutinizer = db.collection('scrutinizer', { capped: true, size: 2, max: 1 });
         const tabulator = db.collection('tabulator', { capped: true, size: 2, max: 1 });
@@ -224,6 +37,7 @@ async function setUpSchema() {
         await scrutinizer.insertOne(Scrutinizer);
         await tabulator.insertOne(Tabulator);
         await councilor.insertOne(Councilor);
+        await SemToSub.insertMany(sem_to_sub);
 
         console.log('database mosys created... closing connection..\n(recommended to run this file only once)');
         mongoClient.close(true);

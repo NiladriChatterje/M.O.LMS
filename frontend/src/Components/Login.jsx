@@ -28,8 +28,8 @@ const Login = () => {
             if (outcome) {
                 setAuthentic(true);
                 if (adminLevel.name !== 'student') {
-                    if (adminLevel == 'examiner') setExaminer(address)
-                    navigate('/marksPortal');
+                    //if (adminLevel === 'examiner') setExaminer(address);
+                    navigate('/department');
                 }
                 else
                     navigate('/marksVisible');
@@ -55,12 +55,12 @@ const Login = () => {
     if (adminLevel)
         return (
             <Flex
-                bg={'blackAlpha.900'}
                 w='full'
                 h='100vh'>
                 <Text
                     bg={'white'}
                     p={4}
+                    boxShadow={'2px 2px 10px -8px black'}
                     pos={'fixed'}
                     left={10}
                     top={'15vh'}
@@ -76,7 +76,7 @@ const Login = () => {
                         bg={'white'}
                         w={window.innerWidth > 1200 ? '40vw' : '90vw'}
                         h={'45vh'}
-                        boxShadow={'1px 1px 15px -10px white'}
+                        boxShadow={'1px 5px 15px -8px black'}
                         pos={'fixed'}
                         left={'50%'}
                         top={'50%'}
@@ -90,9 +90,9 @@ const Login = () => {
                             left='50%'
                             transform={'translateX(-50%)'} />
 
-                        <FormLabel>ID</FormLabel>
+                        <FormLabel fontWeight={900}>ID : </FormLabel>
                         <Input type='number' placeholder='ID' ref={idRef} />
-                        <FormLabel>password</FormLabel>
+                        <FormLabel fontWeight={900}>PASSWORD :</FormLabel>
                         <InputGroup>
                             <Input type={toggle ? 'text' : 'password'} placeholder='PASSWORD' ref={passwordRef} />
                             <InputRightElement

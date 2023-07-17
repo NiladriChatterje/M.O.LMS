@@ -67,16 +67,38 @@ app.post('/updatestdmarks', async (req, res) => {
 
 });
 
+
+app.post('/getStudentList', async (req, res) => {
+    const { sem } = req.body;
+    const deserialzed_sem = JSON.parse(sem);
+    console.log(parseInt(deserialzed_sem))
+    const studentList = await db.collection('student').find({ semester: parseInt(deserialzed_sem) }).toArray();
+    console.log(studentList)
+    res.send(JSON.stringify(studentList));
+});
+
 app.post('/getLoginData', async (req, res) => {
     const { id, password, admin } = req.body
     let result = JSON.stringify(await fetchData(parseInt(JSON.parse(id)), JSON.parse(password), JSON.parse(admin)));
     res.send(result);
 });
+
+
 app.post('/updatestdremarks', async (req, res) => {
     const { result } = req.body;
     const deserialzed_result = JSON.parse(result)
     console.log(JSON.parse(result))
     const success = await db.collection('student').replaceOne({ _id: parseInt(deserialzed_result?._id) }, deserialzed_result);
     if (success) res.send('Remark Updated')
-})
+});
+
+
+
+app.get('/getDepartments', async (req, res) => {
+    const departments = await db.collection('SemToSub').find().toArray();
+    console.log(departments)
+    res.send(JSON.stringify(departments));
+});
+
+
 app.listen(5000, () => { console.log('Listening on Port 5000') })

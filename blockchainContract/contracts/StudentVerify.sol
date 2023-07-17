@@ -91,7 +91,6 @@ contract StudentVerify {
         uint256 tabMarks,
         string memory reason
     ) public onlyOwner {
-        require(tabMarks < 0, "Please recheck the input value");
         if (allStudentData[rollNo].totalMarks != tabMarks) {
             require(bytes(reason).length != 0, "Give a reason");
             allStudentData[rollNo].reasons.push(string.concat("TAB_", reason));

@@ -10,21 +10,22 @@ const AdminMembers = () => {
     const navigate = useNavigate();
 
     return (
-        <Flex h={'100vh'} w={'full'}
-            bg={'blackAlpha.900'}>
+        <Flex h={'100vh'}
+            w={'full'}
+            justifyContent={'center'}
+            alignItems={'center'}
+        >
             <Flex
                 p={5}
+                boxShadow={'-2px 3px 14px -8px black'}
                 flexDir={'column'}
                 justifyContent={'space-between'}
                 alignItems={'center'}
-                position={'fixed'}
-                left={'50%'}
-                top={'50%'}
-                transform={'translate(-50%,-50%)'}
                 h={500} w={window.innerWidth > 1200 ? '30vw' : '80vw'}
-                borderRadius={10}
+                borderRadius={20}
                 bg={'white'}>
-                {Adminmembers?.map(item => <Button key={item.precedence} bg={'green.600'} color={'white'} boxShadow={'1px 1px 20px -5px green'}
+                {Adminmembers?.map((item, i) => <Button key={item.precedence}
+                    bg={'blue.900'} color={'white'} boxShadow={'1px 1px 10px -5px green'}
                     onClick={() => { setAdminLevel(item); navigate('/login') }} variant={'solid'}>{item.name}</Button>)}
             </Flex>
         </Flex>

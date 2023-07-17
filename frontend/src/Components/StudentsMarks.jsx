@@ -14,7 +14,6 @@ const StudentsMarks = () => {
     if (authentic)
         return (
             <Flex
-                bg={'blackAlpha.900'}
                 w={'full'}
                 h={'100vh'}
                 display={'flex'}
